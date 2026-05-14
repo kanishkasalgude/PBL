@@ -97,6 +97,31 @@ app.post('/pickup/request', async (req, res) => {
 });
 
 /**
+ * 2b. POST /pickup/accept
+ * Recycling Collector accepts a requested pickup (sets status → "accepted")
+ */
+app.post('/pickup/accept', async (req, res) => {
+  try {
+    const { pickupId } = req.body;
+    if (!pickupId) {
+      return res.status(400).json({ error: "pickupId is required." });
+    }
+
+    const pickupRef = db.collection('pickups').doc(pickupId);
+    const pickupDoc = await pickupRef.get();
+
+    if (!pickupDoc.exists) {
+      return res.status(404).json({ error: "Pickup not found." });
+    }
+
+    await pickupRef.update({ status: 'accepted' });
+    res.status(200).json({ message: "Pickup accepted.", pickupId });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * 3. POST /pickup/confirm
  * Recycling Collector confirms pickup, updates weight, and calculates credits
  */

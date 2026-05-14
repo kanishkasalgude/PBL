@@ -34,7 +34,7 @@ const PickupCard = ({
             <Package className="w-5 h-5 text-green-600" />
             <h3 className="text-lg font-bold text-gray-800 capitalize">{pickup.wasteType || pickup.type}</h3>
           </div>
-          {userRole === 'collector' && pickup.societyName && (
+          {(userRole === 'collector' || userRole === 'recycling collector') && pickup.societyName && (
             <p className="text-sm font-semibold text-gray-600 mt-1">{pickup.societyName}</p>
           )}
         </div>
@@ -67,9 +67,9 @@ const PickupCard = ({
         )}
       </div>
 
-      {userRole === 'collector' && pickup.status !== 'completed' && (
+      {(userRole === 'collector' || userRole === 'recycling collector') && pickup.status !== 'completed' && (
         <div className="border-t border-gray-100 pt-4 mt-4">
-          {pickup.status === 'pending' && (
+          {(pickup.status === 'pending' || pickup.status === 'requested') && (
             <button 
               onClick={() => onAccept(pickup.id || pickup._id)}
               disabled={isUpdating}
@@ -87,7 +87,7 @@ const PickupCard = ({
                   placeholder="Weight (kg)"
                   value={weightInput || ''}
                   onChange={(e) => setWeightInput(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-gray-900 font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg bg-white text-gray-900 font-bold focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
                 />
               </div>
               <button 
